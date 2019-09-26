@@ -1,15 +1,26 @@
 package net.ukr.mailauto.BaseClass;
 
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class readCookies {
+public class readCookies extends Drivers {
 
+    String baseURL = "https://mail.ukr.net";
     WebDriver driver;
+
+
+    String login = "asdqwez";
+    String pass = ",fhvfktq2";
+
+    private static Cookie freemail;
+    private static Cookie sid;
+    private static Cookie as;
 
     @Before
     public void start()
@@ -26,7 +37,38 @@ public class readCookies {
 
     @Test
     public void writeCookies() {
-        driver.get("https://www.ukr.net/ua/");
+        //Перехід на сторінку логіна та виконання входу до поштового акаунту
+        driver.navigate().to(baseURL);
+        driver.findElement(By.cssSelector("#id-l")).sendKeys(login);
+        driver.findElement(By.cssSelector("#id-p")).sendKeys(pass);
+        driver.findElement(By.cssSelector(".button")).click();
+
+        //Записуємор кукі
+        freemail = driver.manage().getCookieNamed("freemail");
+        sid = driver.manage().getCookieNamed("sid");
+        as = driver.manage().getCookieNamed("as");
+
+        System.out.println("Cookies for auth: " + driver.manage().getCookies());
+
+        //Видалення кук з браузреа
+        driver.manage().deleteAllCookies();
+
+        //Вихід з поштової скриньки
+        driver.quit ();
     }
 
+    @Test
+    public void readCookies(){
+
+        //Виконуємо вхід по кукам
+        driver.navigate().to(baseURL);
+
+        //передача браузеру необхідних кук
+        driver.manage().addCookie(freemail);
+        driver.manage().addCookie(sid);
+        driver.manage().addCookie(as);
+
+        //Перевірка чи зайшли на сторінку
+        Assert.assertEquals(driver.findElement(By.className(".login-button__user")).getText(), login+"@ukr.net");
+    }
 }
