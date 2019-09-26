@@ -43,11 +43,13 @@ public class readCookies extends Drivers {
         driver.findElement(By.cssSelector("#id-p")).sendKeys(pass);
         driver.findElement(By.cssSelector(".button")).click();
 
-        //Перехід на сторінку Налаштувань для отримання кук
-        driver.navigate().to(baseURLSessions);
         //Записуємор кукі
         freemail = driver.manage().getCookieNamed("freemail");
         sid = driver.manage().getCookieNamed("sid");
+
+        //Перехід на сторінку Налаштувань для отримання кук
+        driver.navigate().to(baseURLSessions);
+        //Записуємор кукі
         as = driver.manage().getCookieNamed("as");
 
         System.out.println("Cookies for auth: " + driver.manage().getCookies());
