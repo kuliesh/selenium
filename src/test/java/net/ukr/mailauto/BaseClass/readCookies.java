@@ -10,7 +10,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class readCookies extends Drivers {
 
-    String baseURL = "https://mail.ukr.net";
+    String baseURLMail = "https://mail.ukr.net";
+    String baseURLSessions = "https://mail.ukr.net/desktop#security/sessions";
     WebDriver driver;
 
 
@@ -37,11 +38,13 @@ public class readCookies extends Drivers {
     @Test
     public void writeCookies() {
         //Перехід на сторінку логіна та виконання входу до поштового акаунту
-        driver.navigate().to(baseURL);
+        driver.navigate().to(baseURLMail);
         driver.findElement(By.cssSelector("#id-l")).sendKeys(login);
         driver.findElement(By.cssSelector("#id-p")).sendKeys(pass);
         driver.findElement(By.cssSelector(".button")).click();
 
+        //Перехід на сторінку Налаштувань для отримання кук
+        driver.navigate().to(baseURLSessions);
         //Записуємор кукі
         freemail = driver.manage().getCookieNamed("freemail");
         sid = driver.manage().getCookieNamed("sid");
@@ -60,7 +63,7 @@ public class readCookies extends Drivers {
     public void readCookies(){
 
         //Виконуємо вхід по кукам
-        driver.navigate().to(baseURL);
+        driver.navigate().to(baseURLMail);
 
         //передача браузеру необхідних кук
         driver.manage().addCookie(freemail);
