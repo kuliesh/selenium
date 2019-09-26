@@ -1,6 +1,5 @@
 package net.ukr.mailauto.BaseClass;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +15,7 @@ public class readCookies extends Drivers {
 
 
     String login = "asdqwez";
-    String pass = ",fhvfktq2";
+    String pass = "++++++++++";
 
     private static Cookie freemail;
     private static Cookie sid;
