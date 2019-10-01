@@ -7,25 +7,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
 public class TestRegistration {
 
     static WebDriver driver;
 
-    String baseUrl = "https://accounts.ukr.net/registration";
+    private static String baseUrl = "https://accounts.ukr.net/registration";
 
     @BeforeClass
     public static void setup () {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver ();
+
+        driver.navigate().to(baseUrl);
     }
     @AfterClass
     public static void cleanup () {
-        driver.quit ();
+
+        driver.quit();
     }
 
     /*
@@ -45,11 +46,10 @@ public class TestRegistration {
     //* 1. перевірити, що зверху сторінки є вибір мови
     @Test
     public void choiceOfLanguage() {
-        driver.navigate().to(baseUrl);
 
         SoftAssert softAssertion = new SoftAssert();
         //Перевіряємо чи є елемент для вибору мови
-        softAssertion.assertEquals(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(), true);
+        softAssertion.assertEquals(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(), true, "Вибір мови не відобразився");
 
         //Первіряємо що для вибору є Українська мова
         softAssertion.assertEquals("Українська", driver.findElement(By.xpath("//button[1]/span[1]")).getText(), "Не знайшли Українську");
@@ -61,13 +61,14 @@ public class TestRegistration {
         Assert.assertEquals("English", driver.findElement(By.xpath("//button[3]/span[1]")).getText(), "Не знайшли English");
 
         softAssertion.assertAll();
+
+        driver.navigate().refresh();
     }
 
     //* 2. перевірити що поточна вибрана мова виділена кольором RGBa(52,56,64,1), а мови, які не вибрані - RGBa(102,153,0,1)
 
     @Test
     public void activeLanguage(){
-        driver.navigate().to(baseUrl);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -105,6 +106,87 @@ public class TestRegistration {
                 "Анлійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         softAssertion.assertAll();
+
+        driver.navigate().refresh();
     }
 
+    //Виконується для Української локалізації
+    //3. перевірити, що після вводу перших символів імені скриньки з'являється підказка
+    @Test
+    public void tooltipForCreateName() throws InterruptedException {
+
+        SoftAssert softAssertion = new SoftAssert();
+        driver.findElement(By.id("id-login")).click();
+        driver.findElement(By.id("id-login")).sendKeys("sds");
+        //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявилтьсяелемент - переврити??
+        Thread.sleep(5000);
+        //Перевіряємо, що відобразилась підсказка
+        softAssertion.assertEquals(driver.findElement(By.cssSelector(".login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
+
+        //Перевіряємо, що відобразилась підсказки та помилки саме з потрібним нам текстом:
+        softAssertion.assertEquals("На жаль, скринька з таким іменем вже зайнята", driver.findElement(By.cssSelector(".login-suggestions__error")).getText(),
+                "Помилка не відобразилася з потрібним текстом");
+
+        softAssertion.assertEquals("Ми можемо запропонувати вам такі варіанти:", driver.findElement(By.cssSelector(".login-suggestions__title")).getText(),
+                "Текст, що можемо запропоновати варіанти не відобразилася");
+        //Перевіряємо що відобразився вся кількість підсказок - 6
+
+        for (int i=1; i<=5; i++){
+            softAssertion.assertEquals(driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).isDisplayed(), true,
+                    "Підсказка" +i+" не відобразилася візуально"); //??Чогось на помилку ці тексти не виводяться??
+        }
+
+        softAssertion.assertAll();
+
+        driver.navigate().refresh();
+    }
+
+    // 3.1. перевірити, що колір тексту помилки RGBa(219,75,55,1)
+    @Test
+    public void tooltipColorForError() throws InterruptedException {
+
+        SoftAssert softAssertion = new SoftAssert();
+        driver.findElement(By.id("id-login")).click();
+        driver.findElement(By.id("id-login")).sendKeys("dfdf");
+        Thread.sleep(5000);
+        softAssertion.assertEquals("rgba(219, 75, 55, 1)", driver.findElement(By.cssSelector(".login-suggestions__error")).getCssValue("color"),
+                "Текст помилки не в кольорі RGBa(219,75,55,1)");
+
+        softAssertion.assertAll();
+
+        driver.navigate().refresh();
+    }
+    // 3.2. колір тексту підказки RGBa(140,148,158,1)
+    @Test
+    public void tooltipColorText() throws InterruptedException {
+
+        SoftAssert softAssertion = new SoftAssert();
+        driver.findElement(By.id("id-login")).click();
+        driver.findElement(By.id("id-login")).sendKeys("hghggf");
+        Thread.sleep(5000);
+
+        softAssertion.assertEquals("rgba(140, 148, 158, 1)", driver.findElement(By.cssSelector(".login-suggestions__title")).getCssValue("color"),
+                "Текст помилки не в кольорі RGBa(140,148,158,1)");
+
+        softAssertion.assertAll();
+
+        driver.navigate().refresh();
+    }
+    // 3.3. колір тексту запропонованих варіантів RGBa(78,78,78,1)
+    @Test
+    public void tooltipColorAlternants() throws InterruptedException {
+
+        SoftAssert softAssertion = new SoftAssert();
+        driver.findElement(By.id("id-login")).click();
+        driver.findElement(By.id("id-login")).sendKeys("sdsdsd");
+        Thread.sleep(5000);
+
+        for (int i=1; i<=5; i++) {
+            softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+ ")")).getCssValue("color"),
+                    "Текст помилки не в кольорі RGBa(78,78,78,1)");
+        }
+        softAssertion.assertAll();
+
+        driver.navigate().refresh();
+    }
 }
