@@ -1,4 +1,4 @@
-package net.ukr.mailauto.BaseClass;
+package net.ukr.mailauto.Tests;
 
 public enum Browsers {
     CHROME,

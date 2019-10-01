@@ -1,4 +1,4 @@
-package net.ukr.mailauto.BaseClass.utils;
+package net.ukr.mailauto.Tests.utils;
 
 public class NoSuchBrowserException extends Exception {
 
