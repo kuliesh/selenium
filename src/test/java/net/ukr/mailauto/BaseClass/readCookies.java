@@ -32,7 +32,7 @@ public class readCookies extends Drivers {
     @After
     public void stop()
     {
-        driver.quit();
+        driver.quit() ;
     }
 
     @Test
