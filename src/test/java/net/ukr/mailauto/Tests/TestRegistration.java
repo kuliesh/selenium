@@ -367,4 +367,9 @@ public class TestRegistration {
         softAssertion.assertAll();
         driver.navigate().refresh();
     }
+    @Test
+    public void textColorWithoutDataUkr() throws InterruptedException {
+
+    }
+
 }
