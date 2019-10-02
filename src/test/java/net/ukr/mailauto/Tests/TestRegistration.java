@@ -17,6 +17,10 @@ public class TestRegistration {
     static WebDriver driver;
 
     private static String baseUrl = "https://accounts.ukr.net/registration";
+    private static String RGBColor = "rgb(219, 75, 55)";
+    private static String boardcolor = "border-color";
+    private static String isInvalid = "input-default__input.is-size-normal.is-invalid";
+    private static int i=1000;
 
     @BeforeClass
     public static void setup () {
@@ -122,7 +126,7 @@ public class TestRegistration {
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("sds");
         //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявилтьсяелемент - переврити??
-        Thread.sleep(5000);
+        Thread.sleep(i);
         //Перевіряємо, що відобразилась підсказка
         softAssertion.assertEquals(driver.findElement(By.cssSelector(".login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
 
@@ -151,7 +155,7 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("dfdf");
-        Thread.sleep(5000);
+        Thread.sleep(i);
         softAssertion.assertEquals("rgba(219, 75, 55, 1)", driver.findElement(By.cssSelector(".login-suggestions__error")).getCssValue("color"),
                 "Текст помилки не в кольорі RGBa(219,75,55,1)");
 
@@ -166,7 +170,7 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("hghggf");
-        Thread.sleep(5000);
+        Thread.sleep(i);
 
         softAssertion.assertEquals("rgba(140, 148, 158, 1)", driver.findElement(By.cssSelector(".login-suggestions__title")).getCssValue("color"),
                 "Текст помилки не в кольорі RGBa(140,148,158,1)");
@@ -182,7 +186,7 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("sdsdsd");
-        Thread.sleep(5000);
+        Thread.sleep(i);
 
         for (int i=1; i<=5; i++) {
             softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+ ")")).getCssValue("color"),
@@ -198,23 +202,29 @@ public class TestRegistration {
     public void personalDataUkr() {
 
         //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не Українська мова, тест зупинено");
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не Українська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "Ім'я"
-        softAssertion.assertEquals("Ім'я", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'Ім'я'.");
+        softAssertion.assertEquals("Ім'я", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Ім'я'.");
 
         //Перевіряємо поле "Прізвище"
-        softAssertion.assertEquals("Прізвище", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Прізвище'.");
+        softAssertion.assertEquals("Прізвище", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Прізвище'.");
 
         //Перевіряємо поле "Число"
-        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'число'.");
+        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'число'.");
 
         //Перевіряємо поле "Місяць"
-        softAssertion.assertEquals("місяць", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'місяць'.");
+        softAssertion.assertEquals("місяць", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(),
+                "Невірна підсказка в полі 'місяць'.");
 
         //Перевіряємо поле "рік"
-        softAssertion.assertEquals("рік", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'рік'.");
+        softAssertion.assertEquals("рік", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'рік'.");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -227,23 +237,29 @@ public class TestRegistration {
         driver.findElement(By.xpath("//button[2]/span[1]")).click();
 
         //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не росіська мова, тест зупинено");
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не росіська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "Имя"
-        softAssertion.assertEquals("Имя", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'Имя'.");
+        softAssertion.assertEquals("Имя", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Имя'.");
 
         //Перевіряємо поле Фамилия"
-        softAssertion.assertEquals("Фамилия", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Фамилия'.");
+        softAssertion.assertEquals("Фамилия", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Фамилия'.");
 
         //Перевіряємо поле "число"
-        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'число'.");
+        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'число'.");
 
         //Перевіряємо поле "месяц"
-        softAssertion.assertEquals("месяц", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'месяц'.");
+        softAssertion.assertEquals("месяц", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(),
+                "Невірна підсказка в полі 'месяц'.");
 
         //Перевіряємо поле "год"
-        softAssertion.assertEquals("год", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'год'.");
+        softAssertion.assertEquals("год", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'год'.");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -256,23 +272,97 @@ public class TestRegistration {
         driver.findElement(By.xpath("//button[3]/span[1]")).click();
 
         //Перевіряємо що мова англійська
-        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не англійська мова, тест зупинено");
+        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не англійська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "First name"
-        softAssertion.assertEquals("First name", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'First name'.");
+        softAssertion.assertEquals("First name", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'First name'.");
 
         //Перевіряємо поле Last name"
-        softAssertion.assertEquals("Last name", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Last name'.");
+        softAssertion.assertEquals("Last name", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Last name'.");
 
         //Перевіряємо поле "Day"
-        softAssertion.assertEquals("Day", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'Day'.");
+        softAssertion.assertEquals("Day", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Day'.");
 
         //Перевіряємо поле "Month"
-        softAssertion.assertEquals("Month", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'Month'.");
+        softAssertion.assertEquals("Month", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(),
+                "Невірна підсказка в полі 'Month'.");
 
         //Перевіряємо поле "Year"
-        softAssertion.assertEquals("Year", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Year'.");
+        softAssertion.assertEquals("Year", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"),
+                "Невірна підсказка в полі 'Year'.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
+    }
+
+    /* 5. перевірити, що при спробі відправити не заповнену форму, усі поля підсвічуються червоним (RGBa(219,75,55,1))
+    * і під ними присутній відповідний текст (в залежності від мови) який теж має червоний колір RGBa(219,75,55,1)
+     */
+
+    @Test
+    public void boardColor() throws InterruptedException {
+
+        //Перевіряємо що мова Українська
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не Українська мова, тест зупинено");
+        //Ініціалізуємо тестовий сценарій
+        driver.findElement(By.cssSelector(".verifier__send")).click();
+
+        Thread.sleep(i);
+
+        SoftAssert softAssertion = new SoftAssert();
+
+        //Перевіряємо тест для української мови
+
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-login."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Придумайте ім'я поштової скриньки' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-password."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Придумайте пароль' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-password-repeat."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Введіть пароль повторно' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-first-name."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Ім'я' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("[tabindex='5']."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Прізвище' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-birth-day."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'число' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector(".option-month.is-invalid")).getCssValue(boardcolor),
+                "Границя 'місяць' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("[tabindex='8']."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'рік' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector(".radio__imitator_invalid[for='id-sex-m']")).getCssValue(boardcolor),
+                "Границя 'Чоловік' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+       softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector(".radio__imitator_invalid[for='id-sex-f']")).getCssValue(boardcolor),
+                "Границя 'Жінка' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-sender-name."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Ім'я відправника' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-mobile."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Мобільний телефон' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+
+
+        //Переходимо на російську локалізацію
+        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        //Перевіряємо що мова російська
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не російська мова, тест зупинено");
+        //Ініціалізуємо тестовий сценарій
+        driver.findElement(By.cssSelector(".verifier__send")).click();
+        Thread.sleep(i);
+
+        //Перевіряємо тест для російської мови
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-login."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Придумайте имя почтового ящика' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-password-repeat."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Введите пароль повторно' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector(".radio__imitator_invalid[for='id-sex-f']")).getCssValue(boardcolor),
+                "Границя 'Женщина' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
+        softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-mobile."+isInvalid)).getCssValue(boardcolor),
+                "Границя 'Мобильный телефон' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
