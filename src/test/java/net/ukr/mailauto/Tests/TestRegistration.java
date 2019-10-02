@@ -10,6 +10,8 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.util.concurrent.locks.Condition;
+
 public class TestRegistration {
 
     static WebDriver driver;
@@ -22,6 +24,7 @@ public class TestRegistration {
         driver = new ChromeDriver ();
 
         driver.navigate().to(baseUrl);
+        driver.navigate().refresh();
     }
     @AfterClass
     public static void cleanup () {
@@ -187,6 +190,91 @@ public class TestRegistration {
         }
         softAssertion.assertAll();
 
+        driver.navigate().refresh();
+    }
+
+    //4.перевірити, що в полях ім'я, прізвище,число, місяць, рік є відповідні підказки (в залежності від обраної мови)
+    @Test
+    public void personalDataUkr() {
+
+        //Перевіряємо що мова Українська
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не Українська мова, тест зупинено");
+        SoftAssert softAssertion = new SoftAssert();
+
+        //Перевіряємо поле "Ім'я"
+        softAssertion.assertEquals("Ім'я", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'Ім'я'.");
+
+        //Перевіряємо поле "Прізвище"
+        softAssertion.assertEquals("Прізвище", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Прізвище'.");
+
+        //Перевіряємо поле "Число"
+        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'число'.");
+
+        //Перевіряємо поле "Місяць"
+        softAssertion.assertEquals("місяць", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'місяць'.");
+
+        //Перевіряємо поле "рік"
+        softAssertion.assertEquals("рік", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'рік'.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
+    }
+
+    @Test
+    public void personalDataRu() {
+
+        //Переходимо на російську локалізацію
+        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+
+        //Перевіряємо що мова російська
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не росіська мова, тест зупинено");
+        SoftAssert softAssertion = new SoftAssert();
+
+        //Перевіряємо поле "Имя"
+        softAssertion.assertEquals("Имя", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'Имя'.");
+
+        //Перевіряємо поле Фамилия"
+        softAssertion.assertEquals("Фамилия", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Фамилия'.");
+
+        //Перевіряємо поле "число"
+        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'число'.");
+
+        //Перевіряємо поле "месяц"
+        softAssertion.assertEquals("месяц", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'месяц'.");
+
+        //Перевіряємо поле "год"
+        softAssertion.assertEquals("год", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'год'.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
+    }
+
+    @Test
+    public void personalDataEn() {
+
+        //Переходимо на англійську локалізацію
+        driver.findElement(By.xpath("//button[3]/span[1]")).click();
+
+        //Перевіряємо що мова англійська
+        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Вибрана не англійська мова, тест зупинено");
+        SoftAssert softAssertion = new SoftAssert();
+
+        //Перевіряємо поле "First name"
+        softAssertion.assertEquals("First name", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"), "Невірна підсказка в полі 'First name'.");
+
+        //Перевіряємо поле Last name"
+        softAssertion.assertEquals("Last name", driver.findElement(By.cssSelector("[tabindex='5']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Last name'.");
+
+        //Перевіряємо поле "Day"
+        softAssertion.assertEquals("Day", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"), "Невірна підсказка в полі 'Day'.");
+
+        //Перевіряємо поле "Month"
+        softAssertion.assertEquals("Month", driver.findElement(By.cssSelector(".input-select.form__field.option-month")).getText(), "Невірна підсказка в полі 'Month'.");
+
+        //Перевіряємо поле "Year"
+        softAssertion.assertEquals("Year", driver.findElement(By.cssSelector("[tabindex='8']")).getAttribute("placeholder"), "Невірна підсказка в полі 'Year'.");
+
+        softAssertion.assertAll();
         driver.navigate().refresh();
     }
 }
