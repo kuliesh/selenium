@@ -18,17 +18,23 @@ public class TestRegistration {
 
     private static String baseUrl = "https://accounts.ukr.net/registration";
 
-    private static String RGBColor = "rgb(219, 75, 55)";
-    private static String RGBColorError = "rgba(219, 75, 55, 1)";
+    String RGBColor = "rgb(219, 75, 55)";
+    String RGBColorError = "rgba(219, 75, 55, 1)";
 
-    private static String boardcolor = "border-color";
-    private static String color = "color";
+    String boardcolor = "border-color";
+    String color = "color";
 
     private static String isInvalid = "input-default__input.is-size-normal.is-invalid";
 
     private static String errorUkr = "Поле має бути заповнене";
     private static String errorRu = "Поле должно быть заполнено";
     private static String errorEng = "You can’t leave this empty";
+
+    public static String UA = "//button[1]/span[1]";
+    public static String RU = "//button[2]/span[1]";
+    public static String EN = "//button[3]/span[1]";
+
+    private static String verLang = "h1.header-title";
 
     private static int i=1000;
 
@@ -65,13 +71,13 @@ public class TestRegistration {
         softAssertion.assertEquals(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(), true, "Вибір мови не відобразився");
 
         //Первіряємо що для вибору є Українська мова .linkText
-        softAssertion.assertEquals("Українська", driver.findElement(By.xpath("//button[1]/span[1]")).getText(), "Не знайшли Українську");
+        softAssertion.assertEquals("Українська", driver.findElement(By.xpath(UA)).getText(), "Не знайшли Українську");
 
         //Первіряємо що для вибору є Українська мова
-        softAssertion.assertEquals("Русский", driver.findElement(By.xpath("//button[2]/span[1]")).getText(), "Не знайшли Русский");
+        softAssertion.assertEquals("Русский", driver.findElement(By.xpath(RU)).getText(), "Не знайшли Русский");
 
         //Первіряємо що для вибору є Українська мова
-        Assert.assertEquals("English", driver.findElement(By.xpath("//button[3]/span[1]")).getText(), "Не знайшли English");
+        Assert.assertEquals("English", driver.findElement(By.xpath(EN)).getText(), "Не знайшли English");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -84,36 +90,36 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
 
         //Виконуємо клік по "Русский"
-        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що перемкнулися на російську мову !!Не зумів прив'язати класс header__lang-item header__lang-item_active!!
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(), "Не російська мова");
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(), "Не російська мова");
 
         //Перевіряємо, що кнопка Россійській виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath("//button[2]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath("//button[1]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка Англіська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath("//button[3]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(EN)).getCssValue("color"),
                 "Англійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Щоб перевірити, що у насзмінюється колір активної кнопки
         //Вибиремо тепер Українську локалізацію і перевіремо, що колір кнопок змінюється
-        driver.findElement(By.xpath("//button[1]/span[1]")).click();
+        driver.findElement(By.xpath(UA)).click();
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath("//button[1]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Російська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath("//button[2]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка РАнглійська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath("//button[3]/span[1]")).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(EN)).getCssValue("color"),
                 "Анлійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         softAssertion.assertAll();
@@ -131,16 +137,16 @@ public class TestRegistration {
         //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявиться елемент - перевірити??
         Thread.sleep(i);
         //Перевіряємо, що відобразилась підсказка
-        softAssertion.assertEquals(driver.findElement(By.cssSelector(".login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
+        softAssertion.assertEquals(driver.findElement(By.className("login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
 
         //Перевіряємо, що відобразилась підсказки та помилки саме з потрібним нам текстом:
-        softAssertion.assertEquals("На жаль, скринька з таким іменем вже зайнята", driver.findElement(By.cssSelector(".login-suggestions__error")).getText(),
+        softAssertion.assertEquals("На жаль, скринька з таким іменем вже зайнята", driver.findElement(By.className("login-suggestions__error")).getText(),
                 "Помилка не відобразилася з потрібним текстом");
 
-        softAssertion.assertEquals("Ми можемо запропонувати вам такі варіанти:", driver.findElement(By.cssSelector(".login-suggestions__title")).getText(),
+        softAssertion.assertEquals("Ми можемо запропонувати вам такі варіанти:", driver.findElement(By.className("login-suggestions__title")).getText(),
                 "Текст, що можемо запропоновати варіанти не відобразилася");
-        //Перевіряємо що відобразився вся кількість підсказок - 6
 
+        //Перевіряємо що відобразився вся кількість підсказок - 6
         for (int i=1; i<=5; i++){
             softAssertion.assertEquals(driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).isDisplayed(), true,
                     "Підсказка"+i+" не відобразилася візуально"); //??Чогось на помилку ці тексти не виводяться??
@@ -158,8 +164,8 @@ public class TestRegistration {
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("dfdf");
         Thread.sleep(i);
-        softAssertion.assertEquals("rgba(219, 75, 55, 1)", driver.findElement(By.cssSelector(".login-suggestions__error")).getCssValue("color"),
-                "Текст помилки не в кольорі RGBa(219,75,55,1)");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.className("login-suggestions__error")).getCssValue("color"),
+                "Текст помилки не в кольорі "+RGBColorError+".");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -174,8 +180,8 @@ public class TestRegistration {
         driver.findElement(By.id("id-login")).sendKeys("hghggf");
         Thread.sleep(i);
 
-        softAssertion.assertEquals("rgba(140, 148, 158, 1)", driver.findElement(By.cssSelector(".login-suggestions__title")).getCssValue("color"),
-                "Текст помилки не в кольорі RGBa(140,148,158,1)");
+        softAssertion.assertEquals("rgba(140, 148, 158, 1)", driver.findElement(By.className("login-suggestions__title")).getCssValue("color"),
+                "Текст підсказки не в кольорі RGBa(140,148,158,1)");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -192,7 +198,7 @@ public class TestRegistration {
 
         for (int i=1; i<=5; i++) {
             softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).getCssValue("color"),
-                    "Текст помилки не в кольорі RGBa(78,78,78,1)");
+                    "Текст варіанту не в кольорі RGBa(78,78,78,1)");
         }
         softAssertion.assertAll();
 
@@ -204,12 +210,12 @@ public class TestRegistration {
     public void personalDataUkr() {
 
         //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "Ім'я"
-        softAssertion.assertEquals("Ім'я", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+        softAssertion.assertEquals("Ім'я", driver.findElement(By.id("id-first-name")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'Ім'я'.");
 
         //Перевіряємо поле "Прізвище"
@@ -217,7 +223,7 @@ public class TestRegistration {
                 "Невірна підсказка в полі 'Прізвище'.");
 
         //Перевіряємо поле "Число"
-        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+        softAssertion.assertEquals("число", driver.findElement(By.id("id-birth-day")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'число'.");
 
         //Перевіряємо поле "Місяць"
@@ -236,15 +242,15 @@ public class TestRegistration {
     public void personalDataRu() {
 
         //Переходимо на російську локалізацію
-        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        driver.findElement(By.xpath(RU)).click();
 
         //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не росіська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "Имя"
-        softAssertion.assertEquals("Имя", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+        softAssertion.assertEquals("Имя", driver.findElement(By.id("id-first-name")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'Имя'.");
 
         //Перевіряємо поле Фамилия"
@@ -252,7 +258,7 @@ public class TestRegistration {
                 "Невірна підсказка в полі 'Фамилия'.");
 
         //Перевіряємо поле "число"
-        softAssertion.assertEquals("число", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+        softAssertion.assertEquals("число", driver.findElement(By.id("id-birth-day")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'число'.");
 
         //Перевіряємо поле "месяц"
@@ -271,15 +277,15 @@ public class TestRegistration {
     public void personalDataEn() {
 
         //Переходимо на англійську локалізацію
-        driver.findElement(By.xpath("//button[3]/span[1]")).click();
+        driver.findElement(By.xpath(EN)).click();
 
         //Перевіряємо що мова англійська
-        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не англійська мова, тест зупинено");
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо поле "First name"
-        softAssertion.assertEquals("First name", driver.findElement(By.cssSelector("#id-first-name")).getAttribute("placeholder"),
+        softAssertion.assertEquals("First name", driver.findElement(By.id("id-first-name")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'First name'.");
 
         //Перевіряємо поле Last name"
@@ -287,7 +293,7 @@ public class TestRegistration {
                 "Невірна підсказка в полі 'Last name'.");
 
         //Перевіряємо поле "Day"
-        softAssertion.assertEquals("Day", driver.findElement(By.cssSelector("#id-birth-day")).getAttribute("placeholder"),
+        softAssertion.assertEquals("Day", driver.findElement(By.id("id-birth-day")).getAttribute("placeholder"),
                 "Невірна підсказка в полі 'Day'.");
 
         //Перевіряємо поле "Month"
@@ -311,10 +317,10 @@ public class TestRegistration {
     public void boardColor() throws InterruptedException {
 
         //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".verifier__send")).click();
+        driver.findElement(By.className("verifier__send")).click();
 
         Thread.sleep(i);
 
@@ -348,12 +354,12 @@ public class TestRegistration {
 
 
         //Переходимо на російську локалізацію
-        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не російська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".verifier__send")).click();
+        driver.findElement(By.className("verifier__send")).click();
         Thread.sleep(i);
 
         //Перевіряємо тест для російської мови
@@ -373,10 +379,10 @@ public class TestRegistration {
     public void textTextErrorColorWithoutDataUkr() throws InterruptedException {
 
         //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено.");
         //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".verifier__send")).click();
+        driver.findElement(By.className("verifier__send")).click();
 
         Thread.sleep(i);
 
@@ -430,12 +436,12 @@ public class TestRegistration {
     public void textTextErrorColorWithoutDataRu() throws InterruptedException {
 
         //Перемикаємося на російську мову
-        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не російська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".verifier__send")).click();
+        driver.findElement(By.className("verifier__send")).click();
 
         Thread.sleep(i);
 
@@ -489,12 +495,12 @@ public class TestRegistration {
     public void textTextErrorColorWithoutDataEng() throws InterruptedException {
 
         //Перемикаємося на англійську мову
-        driver.findElement(By.xpath("//button[3]/span[1]")).click();
+        driver.findElement(By.xpath(EN)).click();
         //Перевіряємо що мова англійська
-        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не англійська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".verifier__send")).click();
+        driver.findElement(By.className("verifier__send")).click();
 
         Thread.sleep(i);
 
