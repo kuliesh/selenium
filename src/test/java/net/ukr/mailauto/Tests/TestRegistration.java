@@ -64,7 +64,7 @@ public class TestRegistration {
 
     //* 1. перевірити, що зверху сторінки є вибір мови
     @Test
-    public void choiceOfLanguage() {
+    public void testChoiceOfLanguage() {
 
         SoftAssert softAssertion = new SoftAssert();
         //Перевіряємо чи є елемент для вибору мови
@@ -85,7 +85,7 @@ public class TestRegistration {
 
     //* 2. перевірити що поточна вибрана мова виділена кольором RGBa(52,56,64,1), а мови, які не вибрані - RGBa(102,153,0,1)
     @Test
-    public void activeLanguage(){
+    public void testActiveLanguage(){
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -129,7 +129,7 @@ public class TestRegistration {
     //Виконується для Української локалізації
     //3. перевірити, що після вводу перших символів імені скриньки з'являється підказка
     @Test
-    public void tooltipForCreateName() throws InterruptedException {
+    public void testTooltipForCreateName() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
@@ -158,7 +158,7 @@ public class TestRegistration {
 
     // 3.1. перевірити, що колір тексту помилки RGBa(219,75,55,1)
     @Test
-    public void tooltipColorForError() throws InterruptedException {
+    public void testTooltipColorForError() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
@@ -173,7 +173,7 @@ public class TestRegistration {
 
     // 3.2. колір тексту підказки RGBa(140,148,158,1)
     @Test
-    public void tooltipColorText() throws InterruptedException {
+    public void testTooltipColorText() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
@@ -189,7 +189,7 @@ public class TestRegistration {
 
     // 3.3. колір тексту запропонованих варіантів RGBa(78,78,78,1)
     @Test
-    public void tooltipColorAlternants() throws InterruptedException {
+    public void testTooltipColorAlternants() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
@@ -207,7 +207,7 @@ public class TestRegistration {
 
     //4.перевірити, що в полях ім'я, прізвище,число, місяць, рік є відповідні підказки (в залежності від обраної мови)
     @Test
-    public void personalDataUkr() {
+    public void testPersonalDataUkr() {
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
@@ -239,7 +239,7 @@ public class TestRegistration {
     }
 
     @Test
-    public void personalDataRu() {
+    public void testPersonalDataRu() {
 
         //Переходимо на російську локалізацію
         driver.findElement(By.xpath(RU)).click();
@@ -274,7 +274,7 @@ public class TestRegistration {
     }
 
     @Test
-    public void personalDataEn() {
+    public void testPersonalDataEn() {
 
         //Переходимо на англійську локалізацію
         driver.findElement(By.xpath(EN)).click();
@@ -314,7 +314,7 @@ public class TestRegistration {
 
     //?? Як покращити локатори??
     @Test
-    public void boardColor() throws InterruptedException {
+    public void testBoardColor() throws InterruptedException {
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
