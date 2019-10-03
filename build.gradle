@@ -15,6 +15,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     testImplementation ("io.github.bonigarcia:webdrivermanager:3.7.1")
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.41.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '3.141.59'
+    testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
 }
