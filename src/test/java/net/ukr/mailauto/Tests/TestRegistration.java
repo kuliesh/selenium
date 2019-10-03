@@ -68,7 +68,7 @@ public class TestRegistration {
 
         SoftAssert softAssertion = new SoftAssert();
         //Перевіряємо чи є елемент для вибору мови
-        softAssertion.assertEquals(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(), true, "Вибір мови не відобразився");
+        softAssertion.assertTrue(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(),  "Вибір мови не відобразився");
 
         //Первіряємо що для вибору є Українська мова .linkText
         softAssertion.assertEquals("Українська", driver.findElement(By.xpath(UA)).getText(), "Не знайшли Українську");
@@ -137,7 +137,7 @@ public class TestRegistration {
         //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявиться елемент - перевірити??
         Thread.sleep(i);
         //Перевіряємо, що відобразилась підсказка
-        softAssertion.assertEquals(driver.findElement(By.className("login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
+        softAssertion.assertTrue(driver.findElement(By.className("login-suggestions")).isDisplayed(),"Підсказка не відобразилася візуально");
 
         //Перевіряємо, що відобразилась підсказки та помилки саме з потрібним нам текстом:
         softAssertion.assertEquals("На жаль, скринька з таким іменем вже зайнята", driver.findElement(By.className("login-suggestions__error")).getText(),
@@ -148,7 +148,7 @@ public class TestRegistration {
 
         //Перевіряємо що відобразився вся кількість підсказок - 6
         for (int i=1; i<=5; i++){
-            softAssertion.assertEquals(driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).isDisplayed(), true,
+            softAssertion.assertTrue(driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).isDisplayed(),
                     "Підсказка"+i+" не відобразилася візуально"); //??Чогось на помилку ці тексти не виводяться??
         }
 
