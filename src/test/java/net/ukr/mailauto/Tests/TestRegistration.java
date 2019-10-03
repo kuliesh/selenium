@@ -17,22 +17,30 @@ public class TestRegistration {
     static WebDriver driver;
 
     private static String baseUrl = "https://accounts.ukr.net/registration";
+
     private static String RGBColor = "rgb(219, 75, 55)";
+    private static String RGBColorError = "rgba(219, 75, 55, 1)";
+
     private static String boardcolor = "border-color";
+    private static String color = "color";
+
     private static String isInvalid = "input-default__input.is-size-normal.is-invalid";
+
+    private static String errorUkr = "Поле має бути заповнене";
+    private static String errorRu = "Поле должно быть заполнено";
+    private static String errorEng = "You can’t leave this empty";
+
     private static int i=1000;
 
     @BeforeClass
     public static void setup () {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver ();
-
         driver.navigate().to(baseUrl);
-        driver.navigate().refresh();
     }
+
     @AfterClass
     public static void cleanup () {
-
         driver.quit();
     }
 
@@ -48,8 +56,6 @@ public class TestRegistration {
     * і під ними присутній відповідний текст (в залежності від мови) який теж має червоний колір RGBa(219,75,55,1)
     */
 
-//Assert.assertEquals(driver.findElement(By.className(".login-button__user")).getText(), login+"@ukr.net");
-
     //* 1. перевірити, що зверху сторінки є вибір мови
     @Test
     public void choiceOfLanguage() {
@@ -58,7 +64,7 @@ public class TestRegistration {
         //Перевіряємо чи є елемент для вибору мови
         softAssertion.assertEquals(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(), true, "Вибір мови не відобразився");
 
-        //Первіряємо що для вибору є Українська мова
+        //Первіряємо що для вибору є Українська мова .linkText
         softAssertion.assertEquals("Українська", driver.findElement(By.xpath("//button[1]/span[1]")).getText(), "Не знайшли Українську");
 
         //Первіряємо що для вибору є Українська мова
@@ -68,12 +74,10 @@ public class TestRegistration {
         Assert.assertEquals("English", driver.findElement(By.xpath("//button[3]/span[1]")).getText(), "Не знайшли English");
 
         softAssertion.assertAll();
-
         driver.navigate().refresh();
     }
 
     //* 2. перевірити що поточна вибрана мова виділена кольором RGBa(52,56,64,1), а мови, які не вибрані - RGBa(102,153,0,1)
-
     @Test
     public void activeLanguage(){
 
@@ -113,7 +117,6 @@ public class TestRegistration {
                 "Анлійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         softAssertion.assertAll();
-
         driver.navigate().refresh();
     }
 
@@ -125,7 +128,7 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("sds");
-        //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявилтьсяелемент - переврити??
+        //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявиться елемент - перевірити??
         Thread.sleep(i);
         //Перевіряємо, що відобразилась підсказка
         softAssertion.assertEquals(driver.findElement(By.cssSelector(".login-suggestions")).isDisplayed(), true, "Підсказка не відобразилася візуально");
@@ -140,11 +143,10 @@ public class TestRegistration {
 
         for (int i=1; i<=5; i++){
             softAssertion.assertEquals(driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).isDisplayed(), true,
-                    "Підсказка" +i+" не відобразилася візуально"); //??Чогось на помилку ці тексти не виводяться??
+                    "Підсказка"+i+" не відобразилася візуально"); //??Чогось на помилку ці тексти не виводяться??
         }
 
         softAssertion.assertAll();
-
         driver.navigate().refresh();
     }
 
@@ -160,9 +162,9 @@ public class TestRegistration {
                 "Текст помилки не в кольорі RGBa(219,75,55,1)");
 
         softAssertion.assertAll();
-
         driver.navigate().refresh();
     }
+
     // 3.2. колір тексту підказки RGBa(140,148,158,1)
     @Test
     public void tooltipColorText() throws InterruptedException {
@@ -176,9 +178,9 @@ public class TestRegistration {
                 "Текст помилки не в кольорі RGBa(140,148,158,1)");
 
         softAssertion.assertAll();
-
         driver.navigate().refresh();
     }
+
     // 3.3. колір тексту запропонованих варіантів RGBa(78,78,78,1)
     @Test
     public void tooltipColorAlternants() throws InterruptedException {
@@ -189,7 +191,7 @@ public class TestRegistration {
         Thread.sleep(i);
 
         for (int i=1; i<=5; i++) {
-            softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+ ")")).getCssValue("color"),
+            softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).getCssValue("color"),
                     "Текст помилки не в кольорі RGBa(78,78,78,1)");
         }
         softAssertion.assertAll();
@@ -304,6 +306,7 @@ public class TestRegistration {
     * і під ними присутній відповідний текст (в залежності від мови) який теж має червоний колір RGBa(219,75,55,1)
      */
 
+    //?? Як покращити локатори??
     @Test
     public void boardColor() throws InterruptedException {
 
@@ -318,7 +321,6 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
 
         //Перевіряємо тест для української мови
-
         softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-login."+isInvalid)).getCssValue(boardcolor),
                 "Границя 'Придумайте ім'я поштової скриньки' не виділена кольором "+RGBColor+" в результаті відсутності даних.");
         softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-password."+isInvalid)).getCssValue(boardcolor),
@@ -368,8 +370,177 @@ public class TestRegistration {
         driver.navigate().refresh();
     }
     @Test
-    public void textColorWithoutDataUkr() throws InterruptedException {
+    public void textTextErrorColorWithoutDataUkr() throws InterruptedException {
 
+        //Перевіряємо що мова Українська
+        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не Українська мова, тест зупинено.");
+        //Ініціалізуємо тестовий сценарій
+        driver.findElement(By.cssSelector(".verifier__send")).click();
+
+        Thread.sleep(i);
+
+        SoftAssert softAssertion = new SoftAssert();
+
+        softAssertion.assertEquals(errorUkr, driver.findElement(By.xpath("//form/section[1]/div/p")).getText(),
+                "Текст помилки '"+errorUkr+"' не відображається українською мовою для поля 'Придумайте ім'я поштової скриньки'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[1]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorUkr+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте ім'я поштової скриньки'.");
+
+        softAssertion.assertEquals("Ви не зможете створити поштову скриньку без пароля", driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getText(),
+                "Текст помилки 'Ви не зможете створити поштову скриньку без пароля' не відображається українською мовою для поля 'Придумайте пароль'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getCssValue(color),
+                "Текст помилки 'Ви не зможете створити поштову скриньку без пароля' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте пароль'.");
+
+        softAssertion.assertEquals("Ви не підтвердили новий пароль", driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getText(),
+                "Текст помилки 'Ви не підтвердили новий пароль' не відображається українською мовою для поля 'Введіть пароль повторно'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getCssValue(color),
+                "Текст помилки 'Ви не підтвердили новий пароль' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Введіть пароль повторно'.");
+
+        softAssertion.assertEquals(errorUkr, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getText(),
+                "Текст помилки '"+errorUkr+"' не відображається українською мовою для поля 'Як вас звати?'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getCssValue(color),
+                "Текст помилки '"+errorUkr+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Як вас звати?'.");
+
+        softAssertion.assertEquals(errorUkr, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getText(),
+                "Текст помилки '"+errorUkr+"' не відображається українською мовою для поля 'Дата народження'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getCssValue(color),
+                "Текст помилки '"+errorUkr+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Дата народженняє'.");
+
+        softAssertion.assertEquals("Вкажіть стать", driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getText(),
+                "Текст помилки 'Вкажіть стать' не відображається українською мовою для вибору статі.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getCssValue(color),
+                "Текст помилки 'Вкажіть стать' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для вибору статі.");
+
+        softAssertion.assertEquals(errorUkr, driver.findElement(By.xpath("//form/section[4]/div/p")).getText(),
+                "Текст помилки '"+errorUkr+"' не відображається українською мовою для поля 'Ім'я відправника'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[4]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorUkr+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Ім'я відправника'.");
+
+        softAssertion.assertEquals(errorUkr, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getText(),
+                "Текст помилки '"+errorUkr+"' не відображається українською мовою для поля 'Мобільний телефон'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getCssValue(color),
+                "Текст помилки '"+errorUkr+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Мобільний телефон.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
     }
 
+    @Test
+    public void textTextErrorColorWithoutDataRu() throws InterruptedException {
+
+        //Перемикаємося на російську мову
+        driver.findElement(By.xpath("//button[2]/span[1]")).click();
+        //Перевіряємо що мова російська
+        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не російська мова, тест зупинено");
+        //Ініціалізуємо тестовий сценарій
+        driver.findElement(By.cssSelector(".verifier__send")).click();
+
+        Thread.sleep(i);
+
+        SoftAssert softAssertion = new SoftAssert();
+
+        softAssertion.assertEquals(errorRu, driver.findElement(By.xpath("//form/section[1]/div/p")).getText(),
+                "Текст помилки '"+errorRu+"' не відображається російською мовою для поля 'Придумайте ім'я поштової скриньки'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[1]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorRu+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте ім'я поштової скриньки'.");
+
+        softAssertion.assertEquals("Вы не сможете создать почтовый ящик без пароля", driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getText(),
+                "Текст помилки 'Вы не сможете создать почтовый ящик без пароля' не відображається російською мовою для поля 'Придумайте пароль'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getCssValue(color),
+                "Текст помилки 'Вы не сможете создать почтовый ящик без пароля' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте пароль'.");
+
+        softAssertion.assertEquals("Вы не подтвердили новый пароль", driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getText(),
+                "Текст помилки 'Вы не подтвердили новый пароль' не відображається російською мовою для поля 'Введіть пароль повторно'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getCssValue(color),
+                "Текст помилки 'Вы не подтвердили новый пароль' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Введіть пароль повторно'.");
+
+        softAssertion.assertEquals(errorRu, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getText(),
+                "Текст помилки '"+errorRu+"' не відображається російською мовою для поля 'Як вас звати?'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getCssValue(color),
+                "Текст помилки '"+errorRu+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Як вас звати?'.");
+
+        softAssertion.assertEquals(errorRu, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getText(),
+                "Текст помилки '"+errorRu+"' не відображається російською мовою для поля 'Дата народження'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getCssValue(color),
+                "Текст помилки '"+errorRu+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Дата народженняє'.");
+
+        softAssertion.assertEquals("Укажите пол", driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getText(),
+                "Текст помилки 'Укажите пол' не відображається російською мовою для вибору статі.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getCssValue(color),
+                "Текст помилки 'Укажите пол' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для вибору статі.");
+
+        softAssertion.assertEquals(errorRu, driver.findElement(By.xpath("//form/section[4]/div/p")).getText(),
+                "Текст помилки '"+errorRu+"' не відображається російською мовою для поля 'Ім'я відправника'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[4]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorRu+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Ім'я відправника'.");
+
+        softAssertion.assertEquals(errorRu, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getText(),
+                "Текст помилки '"+errorRu+"' не відображається російською мовою для поля 'Мобільний телефон'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getCssValue(color),
+                "Текст помилки '"+errorRu+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Мобільний телефон.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
+    }
+
+    @Test
+    public void textTextErrorColorWithoutDataEng() throws InterruptedException {
+
+        //Перемикаємося на англійську мову
+        driver.findElement(By.xpath("//button[3]/span[1]")).click();
+        //Перевіряємо що мова англійська
+        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector("h1.header-title")).getText(),
+                "Вибрана не англійська мова, тест зупинено");
+        //Ініціалізуємо тестовий сценарій
+        driver.findElement(By.cssSelector(".verifier__send")).click();
+
+        Thread.sleep(i);
+
+        SoftAssert softAssertion = new SoftAssert();
+
+        softAssertion.assertEquals(errorEng, driver.findElement(By.xpath("//form/section[1]/div/p")).getText(),
+                "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Придумайте ім'я поштової скриньки'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[1]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorEng+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте ім'я поштової скриньки'.");
+
+        softAssertion.assertEquals("You need to think of a password to create a mailbox", driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getText(),
+                "Текст помилки 'You need to think of a password to create a mailbox' не відображається англійською мовою для поля 'Придумайте пароль'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[1]/div/p")).getCssValue(color),
+                "Текст помилки 'You need to think of a password to create a mailbox' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Придумайте пароль'.");
+
+        softAssertion.assertEquals("Please confirm your new password", driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getText(),
+                "Текст помилки 'Please confirm your new password' не відображається англійською мовою для поля 'Введіть пароль повторно'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[2]/div[2]/div/p")).getCssValue(color),
+                "Текст помилки 'Please confirm your new password' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Введіть пароль повторно'.");
+
+        softAssertion.assertEquals(errorEng, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getText(),
+                "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Як вас звати?'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[1]/p")).getCssValue(color),
+                "Текст помилки '"+errorEng+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Як вас звати?'.");
+
+        softAssertion.assertEquals(errorEng, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getText(),
+                "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Дата народження'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[2]/p")).getCssValue(color),
+                "Текст помилки '"+errorEng+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Дата народженняє'.");
+
+        softAssertion.assertEquals("Please specify your gender", driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getText(),
+                "Текст помилки 'Please specify your gender' не відображається англійською мовою для вибору статі.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[3]/section[3]/p")).getCssValue(color),
+                "Текст помилки 'Please specify your gender' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для вибору статі.");
+
+        softAssertion.assertEquals(errorEng, driver.findElement(By.xpath("//form/section[4]/div/p")).getText(),
+                "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Ім'я відправника'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[4]/div/p")).getCssValue(color),
+                "Текст помилки '"+errorEng+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Ім'я відправника'.");
+
+        softAssertion.assertEquals(errorEng, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getText(),
+                "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Мобільний телефон'.");
+        softAssertion.assertEquals(RGBColorError, driver.findElement(By.xpath("//form/section[6]/div/div/p")).getCssValue(color),
+                "Текст помилки '"+errorEng+"' не відображається  кольором "+RGBColorError+" в результаті відсутності даних для поля 'Мобільний телефон.");
+
+        softAssertion.assertAll();
+        driver.navigate().refresh();
+    }
 }
