@@ -3,22 +3,20 @@ package net.ukr.mailauto.Tests;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
 
 public class TestRegistration {
 
     static WebDriver driver;
 
     private static String baseUrl = "https://accounts.ukr.net/registration";
-    private static String ukrnetUrl = "https://www.ukr.net";
-    private static String ukrmailUrl = "https://mail.ukr.net";
 
     String RGBColor = "rgb(219, 75, 55)";
     String RGBColorError = "rgba(219, 75, 55, 1)";
@@ -32,22 +30,19 @@ public class TestRegistration {
     private static String errorRu = "Поле должно быть заполнено";
     private static String errorEng = "You can’t leave this empty";
 
-    public static String UA = "button:nth-of-type(1) > .header__lang-long-name";
-    public static String RU = "button:nth-of-type(2) > .header__lang-long-name";
-    public static String EN = "button:nth-of-type(3) > .header__lang-long-name";
+    public static String UA = "//button[1]/span[1]";
+    public static String RU = "//button[2]/span[1]";
+    public static String EN = "//button[3]/span[1]";
 
     private static String verLang = "h1.header-title";
 
-    private static int i=10;
-
-    public static String parentHandle = "parentHandle";
+    private static int i=1000;
 
     @BeforeClass
     public static void setup () {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver ();
         driver.navigate().to(baseUrl);
-        parentHandle = driver.getWindowHandle(); // get the registration page handle
     }
 
     @AfterClass
@@ -76,13 +71,13 @@ public class TestRegistration {
         softAssertion.assertTrue(driver.findElement(By.cssSelector(".header__lang")).isDisplayed(),  "Вибір мови не відобразився");
 
         //Первіряємо що для вибору є Українська мова .linkText
-        softAssertion.assertEquals("Українська", driver.findElement(By.cssSelector(UA)).getText(), "Не знайшли Українську");
+        softAssertion.assertEquals("Українська", driver.findElement(By.xpath(UA)).getText(), "Не знайшли Українську");
 
         //Первіряємо що для вибору є Українська мова
-        softAssertion.assertEquals("Русский", driver.findElement(By.cssSelector(RU)).getText(), "Не знайшли Русский");
+        softAssertion.assertEquals("Русский", driver.findElement(By.xpath(RU)).getText(), "Не знайшли Русский");
 
         //Первіряємо що для вибору є Українська мова
-        Assert.assertEquals("English", driver.findElement(By.cssSelector(EN)).getText(), "Не знайшли English");
+        Assert.assertEquals("English", driver.findElement(By.xpath(EN)).getText(), "Не знайшли English");
 
         softAssertion.assertAll();
         driver.navigate().refresh();
@@ -95,36 +90,36 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
 
         //Виконуємо клік по "Русский"
-        driver.findElement(By.cssSelector(RU)).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що перемкнулися на російську мову !!Не зумів прив'язати класс header__lang-item header__lang-item_active!!
         Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(), "Не російська мова");
 
         //Перевіряємо, що кнопка Россійській виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.cssSelector(RU)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(UA)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка Англіська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(EN)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(EN)).getCssValue("color"),
                 "Англійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Щоб перевірити, що у насзмінюється колір активної кнопки
         //Вибиремо тепер Українську локалізацію і перевіремо, що колір кнопок змінюється
-        driver.findElement(By.cssSelector(UA)).click();
+        driver.findElement(By.xpath(UA)).click();
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.cssSelector(UA)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.xpath(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Російська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(RU)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка РАнглійська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(EN)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.xpath(EN)).getCssValue("color"),
                 "Анлійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         softAssertion.assertAll();
@@ -134,13 +129,13 @@ public class TestRegistration {
     //Виконується для Української локалізації
     //3. перевірити, що після вводу перших символів імені скриньки з'являється підказка
     @Test
-    public void testTooltipForCreateName(){
+    public void testTooltipForCreateName() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("sds");
         //??Що потрібно використовувати, щоб не ставити тест на паузу, а тільки зявиться елемент - перевірити??
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(i);
         //Перевіряємо, що відобразилась підсказка
         softAssertion.assertTrue(driver.findElement(By.className("login-suggestions")).isDisplayed(),"Підсказка не відобразилася візуально");
 
@@ -163,12 +158,12 @@ public class TestRegistration {
 
     // 3.1. перевірити, що колір тексту помилки RGBa(219,75,55,1)
     @Test
-    public void testTooltipColorForError(){
+    public void testTooltipColorForError() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("dfdf");
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(i);
         softAssertion.assertEquals(RGBColorError, driver.findElement(By.className("login-suggestions__error")).getCssValue("color"),
                 "Текст помилки не в кольорі "+RGBColorError+".");
 
@@ -178,12 +173,12 @@ public class TestRegistration {
 
     // 3.2. колір тексту підказки RGBa(140,148,158,1)
     @Test
-    public void testTooltipColorText(){
+    public void testTooltipColorText() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("hghggf");
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(i);
 
         softAssertion.assertEquals("rgba(140, 148, 158, 1)", driver.findElement(By.className("login-suggestions__title")).getCssValue("color"),
                 "Текст підсказки не в кольорі RGBa(140,148,158,1)");
@@ -194,12 +189,12 @@ public class TestRegistration {
 
     // 3.3. колір тексту запропонованих варіантів RGBa(78,78,78,1)
     @Test
-    public void testTooltipColorAlternants(){
+    public void testTooltipColorAlternants() throws InterruptedException {
 
         SoftAssert softAssertion = new SoftAssert();
         driver.findElement(By.id("id-login")).click();
         driver.findElement(By.id("id-login")).sendKeys("sdsdsd");
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(i);
 
         for (int i=1; i<=5; i++) {
             softAssertion.assertEquals("rgba(78, 78, 78, 1)", driver.findElement(By.cssSelector("li.login-suggestions__item:nth-child("+i+")")).getCssValue("color"),
@@ -247,7 +242,7 @@ public class TestRegistration {
     public void testPersonalDataRu() {
 
         //Переходимо на російську локалізацію
-        driver.findElement(By.cssSelector(RU)).click();
+        driver.findElement(By.xpath(RU)).click();
 
         //Перевіряємо що мова російська
         Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
@@ -282,7 +277,7 @@ public class TestRegistration {
     public void testPersonalDataEn() {
 
         //Переходимо на англійську локалізацію
-        driver.findElement(By.cssSelector(EN)).click();
+        driver.findElement(By.xpath(EN)).click();
 
         //Перевіряємо що мова англійська
         Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
@@ -319,7 +314,7 @@ public class TestRegistration {
 
     //?? Як покращити локатори??
     @Test
-    public void boardColor() throws InterruptedException {
+    public void testBoardColor() throws InterruptedException {
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
@@ -327,7 +322,7 @@ public class TestRegistration {
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
 
-       Thread.sleep(5000);
+        Thread.sleep(i);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -359,13 +354,13 @@ public class TestRegistration {
 
 
         //Переходимо на російську локалізацію
-        driver.findElement(By.cssSelector(RU)).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що мова російська
         Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не російська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(i);
 
         //Перевіряємо тест для російської мови
         softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-login."+isInvalid)).getCssValue(boardcolor),
@@ -381,14 +376,15 @@ public class TestRegistration {
         driver.navigate().refresh();
     }
     @Test
-    public void testTextErrorColorWithoutDataUkr() {
+    public void testTextErrorColorWithoutDataUkr() throws InterruptedException {
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено.");
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+
+        Thread.sleep(i);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -437,16 +433,17 @@ public class TestRegistration {
     }
 
     @Test
-    public void testTextErrorColorWithoutDataRu(){
+    public void testTextErrorColorWithoutDataRu() throws InterruptedException {
 
         //Перемикаємося на російську мову
-        driver.findElement(By.cssSelector(RU)).click();
+        driver.findElement(By.xpath(RU)).click();
         //Перевіряємо що мова російська
         Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не російська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+
+        Thread.sleep(i);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -479,16 +476,17 @@ public class TestRegistration {
     }
 
     @Test
-    public void testTextErrorColorWithoutDataEng(){
+    public void testTextErrorColorWithoutDataEng() throws InterruptedException {
 
         //Перемикаємося на англійську мову
-        driver.findElement(By.cssSelector(EN)).click();
+        driver.findElement(By.xpath(EN)).click();
         //Перевіряємо що мова англійська
         Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не англійська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+
+        Thread.sleep(i);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -516,235 +514,6 @@ public class TestRegistration {
                 "Текст помилки '"+errorEng+"' не відображається англійською мовою для поля 'Мобільний телефон'.");
 
         softAssertion.assertAll();
-        driver.navigate().refresh();
-    }
-
-    //6.1. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для укр локалізації
-    @Test
-    public void testVerifiedPrivacePoliciURLUA() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не Українська мова, тест зупинено.");
-        //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector("form [data-tooltip]")).click ();
-
-        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        String logoUA = driver.findElement(By.cssSelector("img")).getAttribute("src");
-
-        //Пеервіряємо тестові дані
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrnetUrl+"/terms/", driver.getCurrentUrl(),
-                "Посилання сторінки terms не відповідає Українській локалізації.");
-
-        softAssertion.assertEquals(ukrnetUrl+"/img/terms-logo-ua.gif", logoUA,
-                "Лого не відповідає Українській локалізації.");
-
-        softAssertion.assertEquals("Угода про конфіденційність", driver.findElement(By.cssSelector(".article > h2")).getText(),
-                "Текст заголовку сторінки terms не відповідає Українській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
-        driver.navigate().refresh();
-    }
-
-    //6.2. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для рос локалізації
-    @Test
-    public void testVerifiedPrivacePoliciURLRU() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        driver.findElement(By.cssSelector(RU)).click();
-        //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не російська мова, тест зупинено");
-
-        //Ініціалізуємо тестовий сценарій
-
-        driver.findElement(By.cssSelector("form [data-tooltip]")).click ();
-
-        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        String logoRU = driver.findElement(By.cssSelector("img")).getAttribute("src");
-
-        //Пеервіряємо тестові дані
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrnetUrl+"/ru/terms/", driver.getCurrentUrl(),
-                "Посилання сторінки terms не відповідає Російській локалізації.");
-
-        softAssertion.assertEquals(ukrnetUrl+"/img/terms-logo-ru.gif", logoRU,
-                "Лого не відповідає Російській локалізації.");
-
-        softAssertion.assertEquals("Соглашение о конфиденциальности", driver.findElement(By.cssSelector(".article > h2")).getText(),
-                "Текст заголовку сторінки terms не відповідає Російській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
-        driver.navigate().refresh();
-    }
-
-    //6.3. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для англ локалізації
-    @Test
-    public void testVerifiedPrivacePoliciURLEng() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        driver.findElement(By.cssSelector(EN)).click();
-        //Перевіряємо що мова російська
-        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не англійська мова, тест зупинено");
-
-        //Ініціалізуємо тестовий сценарій
-
-        driver.findElement(By.cssSelector("form [data-tooltip]")).click ();
-
-        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        String logoRU = driver.findElement(By.cssSelector("img")).getAttribute("src");
-
-        //Пеервіряємо тестові дані
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrnetUrl+"/terms/", driver.getCurrentUrl(),
-                "Посилання сторінки terms не відповідає Англійській локалізації.");
-
-        softAssertion.assertEquals(ukrnetUrl+"/img/terms-logo-ua.gif", logoRU,
-                "Лого не відповідає Англійській локалізації.");
-
-        softAssertion.assertEquals("Угода про конфіденційність", driver.findElement(By.cssSelector(".article > h2")).getText(),
-                "Текст заголовку сторінки terms не відповідає Англійській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
-        driver.navigate().refresh();
-    }
-
-
-    //7.1. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для української локалізації
-    @Test
-    public void testOpenTermOfServiceUA() {
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        //Перевіряємо що мова Українська
-        Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не Українська мова, тест зупинено.");
-        //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
-
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrmailUrl + "/terms_uk.html", driver.getCurrentUrl(),
-                "Посилання сторінки 'Угоди використання' не відповідає Українській локалізації.");
-
-        softAssertion.assertEquals("Угода про використання електронної пошти FREEMAIL (mail.ukr.net)", driver.findElement(By.cssSelector(".register > h3")).getText(),
-                "Текст заголовку сторінки terms не відповідає Українській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
-        driver.navigate().refresh();
-    }
-
-    //7.2. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для рос локалізації
-    @Test
-    public void testOpenTermOfServiceRU() {
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        driver.findElement(By.cssSelector(RU)).click();
-        //Перевіряємо що мова російська
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не російська мова, тест зупинено");
-
-        //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
-
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrmailUrl + "/terms_ru.html", driver.getCurrentUrl(),
-                "Посилання сторінки 'Угоди використання' не відповідає Українській локалізації.");
-
-        softAssertion.assertEquals("Соглашение об использовании электронной почты FREEMAIL (mail.ukr.net)", driver.findElement(By.cssSelector(".register > h3")).getText(),
-                "Текст заголовку сторінки terms не відповідає Українській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
-        driver.navigate().refresh();
-    }
-
-    //7.3. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для англ локалізації
-    @Test
-    public void testOpenTermOfServiceEN() {
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        driver.findElement(By.cssSelector(EN)).click();
-        //Перевіряємо що мова англійська
-        Assert.assertEquals("Create Your @UKR.NET Mailbox", driver.findElement(By.cssSelector(verLang)).getText(),
-                "Вибрана не англійська мова, тест зупинено");
-
-        //Ініціалізуємо тестовий сценарій
-        driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
-
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
-
-        SoftAssert softAssertion = new SoftAssert();
-
-        softAssertion.assertEquals(ukrmailUrl + "/terms_en.html", driver.getCurrentUrl(),
-                "Посилання сторінки 'Угоди використання' не відповідає Англійській локалізації.");
-
-        softAssertion.assertEquals("Угода про використання електронної пошти FREEMAIL (mail.ukr.net)", driver.findElement(By.cssSelector(".register > h3")).getText(),
-                "Текст заголовку сторінки terms не відповідає Англійській локалізації.");
-
-        softAssertion.assertAll();
-
-        driver.close();
-        driver.switchTo().window(parentHandle);
         driver.navigate().refresh();
     }
 }
