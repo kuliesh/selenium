@@ -6,10 +6,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class TestRegistration {
@@ -67,6 +70,15 @@ public class TestRegistration {
      * і під ними присутній відповідний текст (в залежності від мови) який теж має червоний колір RGBa(219,75,55,1)
      */
 
+    public ExpectedCondition<String> anyWindowOtherThan(Set<String> windows) {
+        return new ExpectedCondition<String>() {
+            public String apply(WebDriver input) {
+                Set<String> handles = driver.getWindowHandles();
+                handles.removeAll(windows);
+                return handles.size() > 0 ? handles.iterator().next() : null;
+            }
+        };
+    }
     //* 1. перевірити, що зверху сторінки є вибір мови
     @Test
     public void testChoiceOfLanguage() {
@@ -523,20 +535,18 @@ public class TestRegistration {
     //6.1. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для укр локалізації
     @Test
     public void testVerifiedPrivacePoliciURLUA() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено.");
         //Ініціалізуємо тестовий сценарій
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector("form [data-tooltip]")).click();
 
-        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         String logoUA = driver.findElement(By.cssSelector("img")).getAttribute("src");
 
@@ -562,7 +572,8 @@ public class TestRegistration {
     //6.2. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для рос локалізації
     @Test
     public void testVerifiedPrivacePoliciURLRU() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         driver.findElement(By.cssSelector(RU)).click();
         //Перевіряємо що мова російська
@@ -570,15 +581,12 @@ public class TestRegistration {
                 "Вибрана не російська мова, тест зупинено");
 
         //Ініціалізуємо тестовий сценарій
-
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector("form [data-tooltip]")).click();
 
         //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         String logoRU = driver.findElement(By.cssSelector("img")).getAttribute("src");
 
@@ -604,7 +612,7 @@ public class TestRegistration {
     //6.3. Тест для перевірки, що по кліку на "угоду про конфіденційність" відкривається угода про конфіденційність для англ локалізації
     @Test
     public void testVerifiedPrivacePoliciURLEng() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         driver.findElement(By.cssSelector(EN)).click();
         //Перевіряємо що мова російська
@@ -612,15 +620,12 @@ public class TestRegistration {
                 "Вибрана не англійська мова, тест зупинено");
 
         //Ініціалізуємо тестовий сценарій
-
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector("form [data-tooltip]")).click();
 
         //перемикаємо фокус WebDriver на нщойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         String logoRU = driver.findElement(By.cssSelector("img")).getAttribute("src");
 
@@ -647,21 +652,18 @@ public class TestRegistration {
     //7.1. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для української локалізації
     @Test
     public void testOpenTermOfServiceUA() {
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не Українська мова, тест зупинено.");
         //Ініціалізуємо тестовий сценарій
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
 
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -681,22 +683,20 @@ public class TestRegistration {
     //7.2. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для рос локалізації
     @Test
     public void testOpenTermOfServiceRU() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
         driver.findElement(By.cssSelector(RU)).click();
         //Перевіряємо що мова російська
         Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(),
                 "Вибрана не російська мова, тест зупинено");
 
         //Ініціалізуємо тестовий сценарій
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
 
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         SoftAssert softAssertion = new SoftAssert();
 
@@ -716,8 +716,7 @@ public class TestRegistration {
     //7.3. Тест для перевірки, що по кліку на "угоду про використання" відкривається угода про використання для англ локалізації
     @Test
     public void testOpenTermOfServiceEN() {
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         driver.findElement(By.cssSelector(EN)).click();
         //Перевіряємо що мова англійська
@@ -725,14 +724,12 @@ public class TestRegistration {
                 "Вибрана не англійська мова, тест зупинено");
 
         //Ініціалізуємо тестовий сценарій
+        Set<String> exitWindows = driver.getWindowHandles();
         driver.findElement(By.cssSelector(".confirm-terms [data-tooltip]")).click();
 
-        //перемикаємо фокус WebDriver на щойно відкрити вкладку
-        for (String winHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(winHandle);
-        }
-
-        equals(js.executeScript("return document.readyState").equals("complete"));
+        //перемикаємо фокус WebDriver на нщойно відкрити вкладку
+        String newWindows = wait.until(anyWindowOtherThan(exitWindows));
+        driver.switchTo().window(newWindows);
 
         SoftAssert softAssertion = new SoftAssert();
 
