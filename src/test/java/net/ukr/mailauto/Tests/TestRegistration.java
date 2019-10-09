@@ -331,7 +331,7 @@ public class TestRegistration {
 
     //?? Як покращити локатори??
     @Test
-    public void boardColor() throws InterruptedException {
+    public void testBoardColor() throws InterruptedException {
 
         //Перевіряємо що мова Українська
         Assert.assertEquals("Реєстрація поштової скриньки", driver.findElement(By.cssSelector(verLang)).getText(),
@@ -377,7 +377,7 @@ public class TestRegistration {
                 "Вибрана не російська мова, тест зупинено");
         //Ініціалізуємо тестовий сценарій
         driver.findElement(By.className("verifier__send")).click();
-        driver.manage().timeouts().implicitlyWait(i, TimeUnit.SECONDS);
+        Thread.sleep(5000);
 
         //Перевіряємо тест для російської мови
         softAssertion.assertEquals(RGBColor, driver.findElement(By.cssSelector("#id-login." + isInvalid)).getCssValue(boardcolor),
