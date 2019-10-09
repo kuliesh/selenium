@@ -3,21 +3,24 @@ package net.ukr.mailauto.Tests;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.util.EventListener;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class TestRegistration {
+public class TestRegistration  {
 
     static WebDriver driver;
+    private static EventFiringWebDriver edr;
+    private static WebDriverWait wait;
 
     private static String baseUrl = "https://accounts.ukr.net/registration";
     private static String ukrnetUrl = "https://www.ukr.net";
@@ -48,6 +51,11 @@ public class TestRegistration {
     @BeforeClass
     public static void setup() {
         WebDriverManager.chromedriver().setup();
+        edr = new EventFiringWebDriver (new ChromeDriver());
+        edr.register(new EventListener());
+
+        wait = new WebDriverWait(edr, 5);
+
         driver = new ChromeDriver();
         driver.navigate().to(baseUrl);
         parentHandle = driver.getWindowHandle(); // get the registration page handle
@@ -107,40 +115,40 @@ public class TestRegistration {
         SoftAssert softAssertion = new SoftAssert();
 
         //Виконуємо клік по "Русский"
-        driver.findElement(By.cssSelector(RU)).click();
+        edr.findElement(By.cssSelector(RU)).click();
         //Перевіряємо що перемкнулися на російську мову !!Не зумів прив'язати класс header__lang-item header__lang-item_active!!
-        Assert.assertEquals("Регистрация почтового ящика", driver.findElement(By.cssSelector(verLang)).getText(), "Не російська мова");
+        Assert.assertEquals("Регистрация почтового ящика", edr.findElement(By.cssSelector(verLang)).getText(), "Не російська мова");
 
         //Перевіряємо, що кнопка Россійській виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.cssSelector(RU)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", edr.findElement(By.cssSelector(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(UA)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", edr.findElement(By.cssSelector(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка Англіська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(EN)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", edr.findElement(By.cssSelector(EN)).getCssValue("color"),
                 "Англійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Щоб перевірити, що у насзмінюється колір активної кнопки
         //Вибиремо тепер Українську локалізацію і перевіремо, що колір кнопок змінюється
-        driver.findElement(By.cssSelector(UA)).click();
+        edr.findElement(By.cssSelector(UA)).click();
 
         //Перевіряємо, що кнопка Українська виділена кольором RGBa(52,56,64,1)
-        softAssertion.assertEquals("rgba(52, 56, 64, 1)", driver.findElement(By.cssSelector(UA)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(52, 56, 64, 1)", edr.findElement(By.cssSelector(UA)).getCssValue("color"),
                 "Українська кнопка не в кольорі RGBa(52,56,64,1)");
 
         //Перевіряємо, що кнопка Російська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(RU)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", edr.findElement(By.cssSelector(RU)).getCssValue("color"),
                 "Російська кнопка не в кольорі RGBa(102,153,0,1)");
 
         //Перевіряємо, що кнопка РАнглійська виділена кольором RGBa(102,153,0,1)
-        softAssertion.assertEquals("rgba(102, 153, 0, 1)", driver.findElement(By.cssSelector(EN)).getCssValue("color"),
+        softAssertion.assertEquals("rgba(102, 153, 0, 1)", edr.findElement(By.cssSelector(EN)).getCssValue("color"),
                 "Анлійська кнопка не в кольорі RGBa(102,153,0,1)");
 
         softAssertion.assertAll();
-        driver.navigate().refresh();
+        edr.navigate().refresh();
     }
 
     //Виконується для Української локалізації

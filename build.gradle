@@ -16,4 +16,7 @@ dependencies {
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     testImplementation ("io.github.bonigarcia:webdrivermanager:3.7.1")
     testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
 }
